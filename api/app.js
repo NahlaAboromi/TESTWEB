@@ -28,9 +28,18 @@ app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
 
 // 🔗 Connect to MongoDB
 const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/modular_skills';
+
+console.log("🛠️ MONGO_URI = ", mongoUri); // ✅ בודק אם בכלל התקבל
+
 mongoose.connect(mongoUri, { useNewUrlParser: true })
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('❌ MongoDB error:', err));
+  .then(() => {
+    console.log('✅ MongoDB connected successfully');
+  })
+  .catch(err => {
+    console.error('❌ MongoDB connection failed!');
+    console.error(err);
+  });
+
 
 // 📦 Import routes
 const teachersRouter = require('./routers/teachers.route');
