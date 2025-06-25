@@ -47,6 +47,7 @@ teachersRouter.post("/register", async (req, res) => {
 
 // Authenticates a teacher by ID and password.
 teachersRouter.post("/login", async (req, res) => {
+  console.log("📥 Login request body:", req.body);
   try {
     const { id, password } = req.body;
         // Find the teacher with the provided credentials
