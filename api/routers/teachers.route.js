@@ -44,38 +44,27 @@ teachersRouter.post("/register", async (req, res) => {
   }
 });
 
-
 teachersRouter.post("/login", async (req, res) => {
-  console.log("🚀 Login route reached");
+  console.log("📥 [LOGIN] Request body received:", req.body);
 
   try {
-    console.log("📥 Login request body:", req.body);
-
     const { id, password } = req.body;
-
-    if (!id || !password) {
-      console.warn("⚠️ Missing ID or Password");
-      return res.status(400).json({ message: "Missing ID or Password" });
-    }
-
-    console.log(`🔍 Looking for teacher with ID: ${id} and Password: ${password}`);
+    console.log("🔍 [LOGIN] Searching for teacher with ID:", id);
 
     const teacher = await Teacher.findOne({ id, password });
 
     if (!teacher) {
-      console.log("❌ No matching teacher found");
+      console.log("❌ [LOGIN] No matching teacher found");
       return res.status(401).json({ message: "Invalid ID or Password" });
     }
 
-    console.log("✅ Teacher authenticated:", teacher.email || teacher.id);
+    console.log("✅ [LOGIN] Teacher found:", teacher.email);
     res.status(200).json({ message: "Login successful", teacher });
-
   } catch (error) {
-    console.error("🔥 Login error:", error);
-    res.status(500).json({ message: error.message || "Server error" });
+    console.error("💥 [LOGIN] Error during login:", error);
+    res.status(500).json({ message: "Server error during login", error: error.message });
   }
 });
-
 
 
 // Sends a verification code to the teacher's email for password reset.
