@@ -45,21 +45,34 @@ teachersRouter.post("/register", async (req, res) => {
 });
 
 
-// Authenticates a teacher by ID and password.
 teachersRouter.post("/login", async (req, res) => {
-  console.log("📥 Login request body:", req.body);
+  console.log("🚀 Login route reached");
+
   try {
+    console.log("📥 Login request body:", req.body);
+
     const { id, password } = req.body;
-        // Find the teacher with the provided credentials
+
+    if (!id || !password) {
+      console.warn("⚠️ Missing ID or Password");
+      return res.status(400).json({ message: "Missing ID or Password" });
+    }
+
+    console.log(`🔍 Looking for teacher with ID: ${id} and Password: ${password}`);
+
     const teacher = await Teacher.findOne({ id, password });
-      // If not found, return unauthorized
+
     if (!teacher) {
+      console.log("❌ No matching teacher found");
       return res.status(401).json({ message: "Invalid ID or Password" });
     }
-       // Respond with success and teacher data
+
+    console.log("✅ Teacher authenticated:", teacher.email || teacher.id);
     res.status(200).json({ message: "Login successful", teacher });
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("🔥 Login error:", error);
+    res.status(500).json({ message: error.message || "Server error" });
   }
 });
 
