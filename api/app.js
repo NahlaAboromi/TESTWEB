@@ -61,13 +61,22 @@ app.use('/api/claude', claudeRoutes);
 app.use('/api', summaryRouter);
 app.use('/api', teacherStudentProgressRouter);
 
-// 🧩 Serve React frontend (for Vercel + local)
 const frontendPath = path.join(__dirname, '..', 'hw2-frontend', 'dist');
+console.log('📁 Static files will be served from:', frontendPath);
+
 app.use(express.static(frontendPath));
 
 app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPath, 'index.html'));
+  const indexPath = path.join(frontendPath, 'index.html');
+  console.log('📄 Sending index.html from:', indexPath);
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      console.error('❌ Error sending index.html:', err);
+      res.status(500).send('Server Error: Could not load frontend');
+    }
+  });
 });
+
 
 // ✅ Export the app for Vercel
 module.exports = app;
