@@ -13,6 +13,7 @@ if (!apiKey) {
 const app = express();
 
 // 🌐 CORS for Vercel + local development
+console.log("🌍 Setting up CORS...");
 app.use(cors({
   origin: [
     'http://localhost:3000',
@@ -22,14 +23,15 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+console.log("✅ CORS configured");
 
 app.use(bodyParser.json({ limit: '5mb' }));
 app.use(bodyParser.urlencoded({ limit: '5mb', extended: true }));
+console.log("📦 Body parser middleware initialized");
 
 // 🔗 Connect to MongoDB
 const mongoUri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/modular_skills';
-
-console.log("🛠️ MONGO_URI = ", mongoUri); // ✅ בודק אם בכלל התקבל
+console.log("🛠️ MONGO_URI =", mongoUri);
 
 mongoose.connect(mongoUri, { useNewUrlParser: true })
   .then(() => {
@@ -40,8 +42,8 @@ mongoose.connect(mongoUri, { useNewUrlParser: true })
     console.error(err);
   });
 
-
 // 📦 Import routes
+console.log("📥 Importing routes...");
 const teachersRouter = require('./routers/teachers.route');
 const studentsRouter = require('./routers/students.route');
 const notificationsRouter = require('./routers/notifications.route');
@@ -50,8 +52,10 @@ const summaryRouter = require('./routers/summary.route');
 const classesRouter = require('./routers/classes.route');
 const claudeRoutes = require('./routers/claude.route');
 const teacherStudentProgressRouter = require('./routers/teacherStudentProgress.route');
+console.log("✅ Routes imported");
 
 // 🧭 Route setup
+console.log("🧭 Setting up routes...");
 app.use('/api/teachers', teachersRouter);
 app.use('/api/students', studentsRouter);
 app.use('/api/notifications', notificationsRouter);
@@ -60,7 +64,9 @@ app.use('/api/classes', classesRouter);
 app.use('/api/claude', claudeRoutes);
 app.use('/api', summaryRouter);
 app.use('/api', teacherStudentProgressRouter);
+console.log("✅ Routes set up");
 
+// 🧩 Serve React frontend (for Vercel + local)
 const frontendPath = path.join(__dirname, '..', 'hw2-frontend', 'dist');
 console.log('📁 Static files will be served from:', frontendPath);
 
@@ -77,8 +83,8 @@ app.get('*', (req, res) => {
   });
 });
 
-
 // ✅ Export the app for Vercel
+console.log("📦 Exporting app...");
 module.exports = app;
 
 // 🖥️ Local development only
